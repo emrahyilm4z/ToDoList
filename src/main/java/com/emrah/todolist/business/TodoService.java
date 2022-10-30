@@ -2,6 +2,7 @@ package com.emrah.todolist.business;
 
 import com.emrah.todolist.dto.todo.todoRequest.TodoAddRequestDto;
 import com.emrah.todolist.dto.todo.todoRequest.TodoUpdateRequestDto;
+import com.emrah.todolist.dto.todo.todoResponse.AllTodoResponseDto;
 import com.emrah.todolist.dto.todo.todoResponse.TodoResponseDto;
 import com.emrah.todolist.entities.Todo;
 import com.emrah.todolist.entities.User;
@@ -39,8 +40,17 @@ public class TodoService {
         return modelMapper.map(todo, TodoResponseDto.class);
     }
 
-    public List<TodoResponseDto> getAll() {
-        return todoRepository.findAll().stream().map(item -> modelMapper.map(item, TodoResponseDto.class)).toList();
+    public List<AllTodoResponseDto> getAll() {
+        return todoRepository.findAll().stream().map(item -> {
+            String userName = item.getUser().getName();
+            return AllTodoResponseDto.builder()
+                    .userName(userName)
+                    .description(item.getDescription())
+                    .startDate(item.getStartDate())
+                    .endDate(item.getEndDate())
+                    .done(item.isDone()).build();
+        }).toList();
+
     }
 
     public boolean deleteTodo(int id) {
@@ -50,7 +60,7 @@ public class TodoService {
     }
 
     public TodoResponseDto updateTodo(TodoUpdateRequestDto todoUpdateRequestDto) {
-        Todo todo  = todoRepository.findById(todoUpdateRequestDto.getId()).orElseThrow(TodoNotFoundId::new);
+        Todo todo = todoRepository.findById(todoUpdateRequestDto.getId()).orElseThrow(TodoNotFoundId::new);
         User user = userService.findById(todo.getUser().getId());
         todo = modelMapper.map(todoUpdateRequestDto, Todo.class);
         todo.setUser(user);
@@ -58,22 +68,26 @@ public class TodoService {
         return modelMapper.map(todo, TodoResponseDto.class);
     }
 
+    private List<TodoResponseDto> getAllTodo() {
+        return todoRepository.findAll().stream().map(item -> modelMapper.map(item, TodoResponseDto.class)).toList();
+    }
+
     public List<TodoResponseDto> getDaily() {
         LocalDate localDate = LocalDate.now();
         int dayOfYear = localDate.get(ChronoField.ALIGNED_DAY_OF_WEEK_IN_YEAR);
-        return getAll().stream().filter((item) -> item.getStartDate().get(ChronoField.ALIGNED_DAY_OF_WEEK_IN_YEAR) == dayOfYear).toList();
+        return getAllTodo().stream().filter((item) -> item.getStartDate().get(ChronoField.ALIGNED_DAY_OF_WEEK_IN_YEAR) == dayOfYear).toList();
     }
 
     public List<TodoResponseDto> getWeekly() {
         LocalDate localDate = LocalDate.now();
         int weekOfYear = localDate.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
-        return getAll().stream().filter((item) -> item.getStartDate().get(ChronoField.ALIGNED_WEEK_OF_YEAR) == weekOfYear).toList();
+        return getAllTodo().stream().filter((item) -> item.getStartDate().get(ChronoField.ALIGNED_WEEK_OF_YEAR) == weekOfYear).toList();
     }
 
     public List<TodoResponseDto> getMonthly() {
         LocalDate localDate = LocalDate.now();
         int monthOfYear = localDate.get(ChronoField.MONTH_OF_YEAR);
-        return getAll().stream().filter((item) -> item.getStartDate().get(ChronoField.MONTH_OF_YEAR) == monthOfYear).toList();
+        return getAllTodo().stream().filter((item) -> item.getStartDate().get(ChronoField.MONTH_OF_YEAR) == monthOfYear).toList();
     }
 
     public List<TodoResponseDto> getNotDone() {

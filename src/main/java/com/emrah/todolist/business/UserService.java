@@ -3,7 +3,9 @@ package com.emrah.todolist.business;
 import com.emrah.todolist.dto.todo.todoResponse.TodoResponseDto;
 import com.emrah.todolist.dto.user.userRequest.UserAddRequestDto;
 import com.emrah.todolist.dto.user.userRequest.UserUpdateRequestDto;
+import com.emrah.todolist.dto.user.userResponse.AllUserResponseDto;
 import com.emrah.todolist.dto.user.userResponse.UserResponseDto;
+import com.emrah.todolist.entities.Todo;
 import com.emrah.todolist.entities.User;
 import com.emrah.todolist.exception.UserNotFoundId;
 import com.emrah.todolist.repository.UserRepository;
@@ -11,9 +13,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor
@@ -29,8 +30,13 @@ public class UserService {
         return modelMapper.map(user, UserResponseDto.class);
     }
 
-    public List<UserResponseDto> getAll() {
-        return userRepository.findAll().stream().map(item -> modelMapper.map(item, UserResponseDto.class)).toList();
+    public List<AllUserResponseDto> getAll() {
+        return userRepository.findAll().stream().map(
+                user -> AllUserResponseDto.builder()
+                        .name(user.getName())
+                        .todos(user.getTodo().stream().map(t -> modelMapper.map(t, TodoResponseDto.class)).toList()
+                        ).build()
+        ).toList();
     }
 
     public Boolean deleteUser(int id) {

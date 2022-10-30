@@ -3,6 +3,7 @@ package com.emrah.todolist.controller;
 import com.emrah.todolist.business.TodoService;
 import com.emrah.todolist.dto.todo.todoRequest.TodoAddRequestDto;
 import com.emrah.todolist.dto.todo.todoRequest.TodoUpdateRequestDto;
+import com.emrah.todolist.dto.todo.todoResponse.AllTodoResponseDto;
 import com.emrah.todolist.dto.todo.todoResponse.TodoResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class TodoListsController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<TodoResponseDto>> getAll() {
+    public ResponseEntity<List<AllTodoResponseDto>> getAll() {
         return new ResponseEntity<>(todoService.getAll(), HttpStatus.OK);
     }
 
