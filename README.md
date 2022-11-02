@@ -47,19 +47,19 @@ Including `FINISHED` to-dos and `UNFINISHED` to-dos.
     ┃ ┗ UserRepository.java
     ┗ TodolistApplication.java
 </details><hr>
-<br></br>
+
 
 ## __[GET]__ All To-Do
 
 ![todos.png](https://raw.githubusercontent.com/emrahyilm4z/ToDoList/master/images/todos.png)
 <hr>
-<br></br>
+
 
 ## __[GET]__ All User
 ![users.png](https://raw.githubusercontent.com/emrahyilm4z/ToDoList/master/images/users.png)
 
 <hr>
-<br></br>
+
 
 ## POSTMAN REQUEST
 ![postman.png](https://raw.githubusercontent.com/emrahyilm4z/ToDoList/master/images/postman.png)
