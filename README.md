@@ -67,4 +67,4 @@ Including `FINISHED` to-dos and `UNFINISHED` to-dos.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://github.com/emrahyilm4z/ToDoList/blob/master/LICENSE.txt)
